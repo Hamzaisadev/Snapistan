@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -13,8 +15,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | bugbook",
-    default: "bugbook",
+    template: "%s | Snapistan",
+    default: "Snapistan",
   },
   description: "The social media app for powernerds",
 };
@@ -27,7 +29,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <ThemeProvider
+        attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+          
+          >
+
         {children}
+        </ThemeProvider>
+        <Toaster />
       </body>
     </html>
   );
