@@ -2,6 +2,7 @@
 
 
 import InfiniteScrollContainer from "@/components/infiniteScrollContainer"
+import DeletePostDialog from "@/components/posts/DeletePostDialog";
 import Post from "@/components/posts/posts"
 import PostsLoadingSkeleton from "@/components/posts/PostsloadingSkeleton"
 import { Button } from "@/components/ui/button"
@@ -56,6 +57,8 @@ export default function ForYouFeed(){
         <Post key={post.id} post={post} />
     ))}
     {isFetchingNextPage && <Loader2 className="mx-auto my-3 animate-spin"/>}
+    
+
     </InfiniteScrollContainer>
     )
 }
