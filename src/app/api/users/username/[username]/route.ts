@@ -1,7 +1,6 @@
 import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
 import { getUserDataSelect } from "@/lib/type";
-import { error } from "console";
 
 export async function GET(
   req: Request,
@@ -25,10 +24,12 @@ export async function GET(
     });
 
     if (!user) {
-      return Response.json({ error: "User Not Found" }, { status: 404 });
+      return Response.json({ error: "User not found" }, { status: 404 });
     }
+
+    return Response.json(user);
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

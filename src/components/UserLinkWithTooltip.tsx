@@ -1,13 +1,12 @@
 "use client";
 
 import kyInstance from "@/lib/ky";
-import { UserData } from "@/lib/type";
 import { useQuery } from "@tanstack/react-query";
-import { fail } from "assert";
 import { HTTPError } from "ky";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
 import UserTooltip from "./UserToolotip";
+import { UserData } from "@/lib/type";
 
 interface UserLinkWithTooltipProps extends PropsWithChildren {
   username: string;
