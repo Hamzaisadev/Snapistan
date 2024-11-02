@@ -43,6 +43,14 @@ export function getPostDataInclude(loggedInUserId: string) {
         userId: true,
       },
     },
+    bookmarks: {
+      where: {
+        userId: loggedInUserId,
+      },
+      select: {
+        userId: true,
+      },
+    },
     _count: {
       select: {
         likes: true,
@@ -60,6 +68,11 @@ export interface PostsPage {
   nextCursor: string | null;
 }
 
+export function getCommentDataInclude(loggedInUserId: string) {
+  
+} satisfies Prisma.
+
+
 export interface FollowerInfo {
   followers: number;
   isFollowedByUser: boolean;
@@ -68,4 +81,7 @@ export interface FollowerInfo {
 export interface LikesInfo {
   likes: number;
   isLikedByUser: boolean;
+}
+export interface BookmarkInfo {
+  isBookmarkedByUser: boolean;
 }
