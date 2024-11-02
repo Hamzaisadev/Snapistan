@@ -14,22 +14,21 @@ export function useSubmitPostMutation() {
 
   const queryClient = useQueryClient();
 
-
-  const { user } = useSession()
+  const { user } = useSession();
 
   const mutation = useMutation({
     mutationFn: submitPost,
     onSuccess: async (newPost) => {
-      const queryFilter = { queryKey: ["post-feed"],
-        predicate(query){
+      const queryFilter = {
+        queryKey: ["post-feed"],
+        predicate(query) {
           return (
-            query.queryKey.includes("for-you") || 
+            query.queryKey.includes("for-you") ||
             (query.queryKey.includes("user-posts") &&
-            query.queryKey.includes(user.id)
-          )
-          )
-        }
-       } satisfies QueryFilters;
+              query.queryKey.includes(user.id))
+          );
+        },
+      } satisfies QueryFilters;
 
       await queryClient.cancelQueries(queryFilter);
 
