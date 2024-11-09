@@ -1,9 +1,8 @@
 import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
 import { NotificationCountInfo } from "@/lib/type";
-import { error } from "console";
 
-async function GET() {
+export async function GET() {
   try {
     const { user } = await validateRequest();
 
@@ -25,6 +24,6 @@ async function GET() {
     return Response.json(data);
   } catch (error) {
     console.error(error);
-    return Response.json({ error: "Internal Server Error" }, { status: 500 });
+    return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }

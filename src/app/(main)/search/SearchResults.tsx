@@ -1,21 +1,18 @@
 "use client";
 
 import InfiniteScrollContainer from "@/components/infiniteScrollContainer";
-import DeletePostDialog from "@/components/posts/DeletePostDialog";
 import Post from "@/components/posts/posts";
 import PostsLoadingSkeleton from "@/components/posts/PostsloadingSkeleton";
-import { Button } from "@/components/ui/button";
 import kyInstance from "@/lib/ky";
-import { PostData, PostsPage } from "@/lib/type";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { error } from "console";
+import { PostsPage } from "@/lib/type";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
-interface UserPostsProps {
-  userId: string;
+interface SearchResultsProps {
+  query: string;
 }
 
-export default function UserPosts({ userId }: UserPostsProps) {
+export default function SearchResults({ query }: SearchResultsProps) {
   const {
     data,
     fetchNextPage,
@@ -24,16 +21,19 @@ export default function UserPosts({ userId }: UserPostsProps) {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery({
-    queryKey: ["post-feed", "user-posts", userId],
+    queryKey: ["post-feed", "search", query],
     queryFn: ({ pageParam }) =>
       kyInstance
-        .get(
-          `/api/users/${userId}/posts`,
-          pageParam ? { searchParams: { cursor: pageParam } } : {},
-        )
+        .get("/api/search", {
+          searchParams: {
+            q: query,
+            ...(pageParam ? { cursor: pageParam } : {}),
+          },
+        })
         .json<PostsPage>(),
     initialPageParam: null as string | null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
+    gcTime: 0,
   });
 
   const posts = data?.pages.flatMap((page) => page.posts) || [];
@@ -45,7 +45,7 @@ export default function UserPosts({ userId }: UserPostsProps) {
   if (status === "success" && !posts.length && !hasNextPage) {
     return (
       <p className="text-center text-muted-foreground">
-        This user hasn&apos;t posted anything yet.
+        No posts found for this query.
       </p>
     );
   }
@@ -53,7 +53,7 @@ export default function UserPosts({ userId }: UserPostsProps) {
   if (status === "error") {
     return (
       <p className="text-center text-destructive">
-        An Error occurred While Loading Posts
+        An error occurred while loading posts.
       </p>
     );
   }

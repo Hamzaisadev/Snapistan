@@ -1,5 +1,6 @@
 import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
+import streamServerClient from "@/lib/stream";
 import { createUploadthing } from "uploadthing/next";
 import { FileRouter, UploadThingError, UTApi } from "uploadthing/server";
 
@@ -21,22 +22,30 @@ export const fileRouter = {
 
       if (oldAvatarUrl) {
         const key = oldAvatarUrl.split(
-          `/a/${process.env.UPLOADTHING_APP_ID}/`,
+          `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`,
         )[1];
 
         await new UTApi().deleteFiles(key);
       }
       const newAvatarUrl = file.url.replace(
         "/f/",
-        `/a/${process.env.UPLOADTHING_APP_ID}/`,
+        `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`,
       );
 
-      await prisma.user.update({
-        where: { id: metadata.user.id },
-        data: {
-          avatarUrl: newAvatarUrl,
-        },
-      });
+      await Promise.all([
+        await prisma.user.update({
+          where: { id: metadata.user.id },
+          data: {
+            avatarUrl: newAvatarUrl,
+          },
+        }),
+        streamServerClient.partialUpdateUser({
+          id: metadata.user.id,
+          set: {
+            image: newAvatarUrl,
+          },
+        }),
+      ]);
 
       return { avatarUrl: newAvatarUrl };
     }),
@@ -55,7 +64,10 @@ export const fileRouter = {
     .onUploadComplete(async ({ file }) => {
       const media = await prisma.media.create({
         data: {
-          url: file.url.replace("/f/", `/a/${process.env.UPLOADTHING_APP_ID}/`),
+          url: file.url.replace(
+            "/f/",
+            `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`,
+          ),
           type: file.type.startsWith("image") ? "IMAGE" : "VIDEO",
         },
       });

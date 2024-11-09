@@ -2,44 +2,42 @@
 
 import { Button } from "@/components/ui/button";
 import kyInstance from "@/lib/ky";
-import { NotificationCountInfo } from "@/lib/type";
+import { MessageCountInfo } from "@/lib/type";
+
 import { useQuery } from "@tanstack/react-query";
-import { Bell } from "lucide-react";
+import { Mail } from "lucide-react";
 import Link from "next/link";
 
-interface NotificationsButtonProps {
-  initialState: NotificationCountInfo;
+interface MessagesButtonProps {
+  initialState: MessageCountInfo;
 }
 
-export default function NotificationsButton({
-  initialState,
-}: NotificationsButtonProps) {
+export default function MessagesButton({ initialState }: MessagesButtonProps) {
   const { data } = useQuery({
-    queryKey: ["unread-notification-count"],
+    queryKey: ["unread-messages-count"],
     queryFn: () =>
-      kyInstance
-        .get("/api/notifications/unread-count")
-        .json<NotificationCountInfo>(),
+      kyInstance.get("/api/messages/unread-count").json<MessageCountInfo>(),
     initialData: initialState,
     refetchInterval: 60 * 1000,
   });
+
   return (
     <Button
       variant="ghost"
       className="flex items-center justify-start gap-3"
-      title="Notifications"
+      title="Messages"
       asChild
     >
-      <Link href="/notifications">
+      <Link href="/messages">
         <div className="relative">
-          <Bell />
+          <Mail />
           {!!data.unreadCount && (
             <span className="absolute -right-1 -top-1 rounded-full bg-primary px-1 text-xs font-medium tabular-nums text-primary-foreground">
               {data.unreadCount}
             </span>
           )}
         </div>
-        <span className="hidden lg:inline">Notifications</span>
+        <span className="hidden lg:inline">Messages</span>
       </Link>
     </Button>
   );

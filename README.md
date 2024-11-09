@@ -104,7 +104,7 @@ Copy code
 DATABASE_URL=postgresql://username:password@localhost:5432/snapistan
 NEXTAUTH_SECRET=your_nextauth_secret
 UPLOADTHING_SECRET=your_uploadthing_secret
-UPLOADTHING_APP_ID=your_uploadthing_app_id
+NEXT_PUBLIC_UPLOADTHING_APP_ID=your_NEXT_PUBLIC_UPLOADTHING_APP_ID
 🏃 Running the Application
 Development Mode:
 bash
