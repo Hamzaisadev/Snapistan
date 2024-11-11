@@ -1,5 +1,5 @@
 {
-  "cron": [
+  "crons": [
     {
       "path": "/api/clear-uploads",
       "schedule": "0 2 * * *"
