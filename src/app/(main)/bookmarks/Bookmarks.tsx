@@ -6,7 +6,7 @@ import Post from "@/components/posts/posts";
 import PostsLoadingSkeleton from "@/components/posts/PostsloadingSkeleton";
 import { Button } from "@/components/ui/button";
 import kyInstance from "@/lib/ky";
-import { postData, PostsPage } from "@/lib/type";
+import { PostData, PostsPage } from "@/lib/type";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { error } from "console";
 import { Loader2 } from "lucide-react";
