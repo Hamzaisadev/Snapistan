@@ -5,7 +5,7 @@ import TrendsSidebar from "@/components/TrendsSidebar";
 import { Button } from "@/components/ui/button";
 import UserAvatar from "@/components/ui/UserAvatar";
 import prisma from "@/lib/prisma";
-import { FollowersInfo, getUserDataSelect, UserData } from "@/lib/type";
+import { FollowerInfo, getUserDataSelect, UserData } from "@/lib/type";
 import { formatNumber } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { promises } from "dns";
@@ -86,7 +86,7 @@ interface UserProfileProps {
 }
 
 async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
-  const followersInfo: FollowersInfo = {
+  const FollowerInfo: FollowerInfo = {
     followers: user._count.followers,
     isFollowedByUser: user.followers.some(
       ({ followerId }) => followerId === loggedInUserId,
@@ -116,14 +116,14 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
               </span>
             </span>
 
-            <FollowerCount userId={user.id} initialState={followersInfo} />
+            <FollowerCount userId={user.id} initialState={FollowerInfo} />
           </div>
         </div>
 
         {user.id === loggedInUserId ? (
           <EditProfileButton user={user} />
         ) : (
-          <FollowButton userId={user.id} initialState={followersInfo} />
+          <FollowButton userId={user.id} initialState={FollowerInfo} />
         )}
       </div>
 

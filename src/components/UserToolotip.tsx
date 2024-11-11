@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "@/app/(main)/SessionProvider";
-import { FollowersInfo, UserData } from "@/lib/type";
+import { FollowerInfo, UserData } from "@/lib/type";
 import { PropsWithChildren } from "react";
 import {
   Tooltip,
@@ -22,7 +22,7 @@ interface UserTooltipProps extends PropsWithChildren {
 export default function UserTooltip({ children, user }: UserTooltipProps) {
   const { user: loggedInUser } = useSession();
 
-  const followerState: FollowersInfo = {
+  const followerState: FollowerInfo = {
     followers: user._count.followers,
     isFollowedByUser: !!user.followers.some(
       ({ followerId }) => followerId === loggedInUser.id,
