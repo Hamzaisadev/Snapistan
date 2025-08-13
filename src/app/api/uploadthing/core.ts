@@ -2,9 +2,13 @@ import { validateRequest } from "@/auth";
 import prisma from "@/lib/prisma";
 import streamServerClient from "@/lib/stream";
 import { createUploadthing } from "uploadthing/next";
-import { FileRouter, UploadThingError, UTApi } from "uploadthing/server";
+import { FileRouter, UploadThingError } from "uploadthing/server";
+import { customUTApi } from "@/lib/uploadthing-utils";
 
 const f = createUploadthing();
+
+// Set the custom UTApi instance as the default
+globalThis.UTApi = customUTApi;
 
 export const fileRouter = {
   avatar: f({
