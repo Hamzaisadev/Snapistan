@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { UTApi } from "uploadthing/server";
+import { normalizeUploadUrl } from "@/lib/uploadthing-utils";
 
 export async function GET(req: Request) {
   try {
@@ -29,12 +30,21 @@ export async function GET(req: Request) {
       },
     });
 
-    new UTApi().deleteFiles(
-      unusedMedia.map(
-        (m) =>
-          m.url.split(`/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`)[1],
-      ),
-    );
+    const keysToDelete = unusedMedia
+      .map((m) => {
+        try {
+          const url = new URL(m.url);
+          return url.pathname.split('/').pop();
+        } catch (error) {
+          console.error('Error processing URL:', m.url, error);
+          return null;
+        }
+      })
+      .filter((key): key is string => key !== null);
+
+    if (keysToDelete.length > 0) {
+      await new UTApi().deleteFiles(keysToDelete);
+    }
 
     await prisma.media.deleteMany({
       where: {
