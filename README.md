@@ -254,7 +254,11 @@ This project is licensed under the MIT License.
 
 ## 📞 Contact
 
+<<<<<<< HEAD
 For any questions or support, please reach out to [Your Name](mailto:your.email@example.com).
+=======
+For any questions or support, please reach out to [Hamza](mailto:hamzaisadev@gmail.com).
+>>>>>>> 6a534f1fe38007a62be77b704b22f226530746a0
 
 ## 📷 Usage Examples
 
