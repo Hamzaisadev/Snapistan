@@ -3,12 +3,9 @@ import prisma from "@/lib/prisma";
 import streamServerClient from "@/lib/stream";
 import { createUploadthing } from "uploadthing/next";
 import { FileRouter, UploadThingError } from "uploadthing/server";
-import { customUTApi } from "@/lib/uploadthing-utils";
+import { normalizeUploadUrl } from "@/lib/uploadthing-utils";
 
 const f = createUploadthing();
-
-// Set the custom UTApi instance as the default
-globalThis.UTApi = customUTApi;
 
 export const fileRouter = {
   avatar: f({
@@ -25,16 +22,19 @@ export const fileRouter = {
       const oldAvatarUrl = metadata.user.avatarUrl;
 
       if (oldAvatarUrl) {
-        const key = oldAvatarUrl.split(
-          `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`,
-        )[1];
-
-        await new UTApi().deleteFiles(key);
+        try {
+          const url = new URL(oldAvatarUrl);
+          const key = url.pathname.split('/').pop();
+          if (key) {
+            await new (require('uploadthing/server').UTApi)().deleteFiles(key);
+          }
+        } catch (error) {
+          console.error('Error deleting old avatar:', error);
+        }
       }
-      const newAvatarUrl = file.url.replace(
-        "/f/",
-        `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`,
-      );
+      
+      // Normalize the URL to use utfs.io
+      const newAvatarUrl = normalizeUploadUrl(file.url);
 
       await Promise.all([
         await prisma.user.update({
