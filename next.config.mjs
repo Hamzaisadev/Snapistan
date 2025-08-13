@@ -7,30 +7,23 @@ const nextConfig = {
   },
   serverExternalPackages: ["@node-rs/argon2"],
   images: {
-    domains: ['utfs.io', '*.ufs.sh'],
+    domains: [
+      'utfs.io',
+      '*.ufs.sh',
+      '76q749pxf2.ufs.sh',
+    ],
     remotePatterns: [
-      // For production
+      // Handle all utfs.io URLs
       {
         protocol: 'https',
         hostname: 'utfs.io',
-        pathname: '/f/**',
+        pathname: '**',
       },
-      // For development
+      // Handle all ufs.sh subdomains
       {
         protocol: 'https',
         hostname: '*.ufs.sh',
-        pathname: '/a/**',
-      },
-      // Fallback patterns
-      {
-        protocol: 'https',
-        hostname: 'utfs.io',
-        pathname: `/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/**`,
-      },
-      {
-        protocol: 'https',
-        hostname: '*.ufs.sh',
-        pathname: `/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/**`,
+        pathname: '**',
       },
     ],
   },
